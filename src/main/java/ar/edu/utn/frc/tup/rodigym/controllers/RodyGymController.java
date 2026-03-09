@@ -1,43 +1,48 @@
-package ar.edu.utn.frc.tup.piii.controllers;
+package ar.edu.utn.frc.tup.rodigym.controllers;
 
-import ar.edu.utn.frc.tup.piii.dtos.DummyDto;
-import ar.edu.utn.frc.tup.piii.models.Dummy;
-import ar.edu.utn.frc.tup.piii.services.DummyService;
-import org.springframework.beans.factory.annotation.Autowired;
+import ar.edu.utn.frc.tup.rodigym.dtos.DummyDto;
+import ar.edu.utn.frc.tup.rodigym.models.Dummy;
+import ar.edu.utn.frc.tup.rodigym.services.DummyService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/dummy")
-public class DummyController {
-    @Autowired
+@RequestMapping("/rodygym")
+public class RodyGymController {
+
     private DummyService dummyService;
 
-    @GetMapping("")
+    public RodyGymController(DummyService dummyService) {
+        this.dummyService = dummyService;
+    }
+
     public ResponseEntity<DummyDto> getDummyList(){
         List<Dummy> dummyList = dummyService.getDummyList();
         return null;
     }
-    @GetMapping("/{id}")
+
     public ResponseEntity<DummyDto> getDummyList(@PathVariable Long id){
         Dummy dummy = dummyService.getDummy(id);
         return null;
     }
-    @PostMapping("")
+
     public ResponseEntity<DummyDto> postDummy(DummyDto dummyDto){
         Dummy dummy = dummyService.createDummy(null);
         return null;
     }
-    @PutMapping("")
+
     public ResponseEntity<DummyDto> putDummy(DummyDto dummyDto){
         Dummy dummy = dummyService.updateDummy(null);
         return null;
     }
-    @DeleteMapping("")
+
     public ResponseEntity<Void> deleteDummy(DummyDto dummyDto){
         dummyService.deleteDummy(null);
         return null;
     }
 }
+

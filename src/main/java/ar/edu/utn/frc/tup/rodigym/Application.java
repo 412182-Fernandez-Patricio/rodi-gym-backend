@@ -1,4 +1,4 @@
-package ar.edu.utn.frc.tup.piii;
+package ar.edu.utn.frc.tup.rodigym;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,3 +11,4 @@ public class Application {
 	}
 
 }
+

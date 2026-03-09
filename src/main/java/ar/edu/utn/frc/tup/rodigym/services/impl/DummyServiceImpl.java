@@ -1,8 +1,8 @@
-package ar.edu.utn.frc.tup.piii.services.impl;
+package ar.edu.utn.frc.tup.rodigym.services.impl;
 
-import ar.edu.utn.frc.tup.piii.models.Dummy;
-import ar.edu.utn.frc.tup.piii.repositories.DummyRepository;
-import ar.edu.utn.frc.tup.piii.services.DummyService;
+import ar.edu.utn.frc.tup.rodigym.models.Dummy;
+import ar.edu.utn.frc.tup.rodigym.repositories.DummyRepository;
+import ar.edu.utn.frc.tup.rodigym.services.DummyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,3 +38,4 @@ public class DummyServiceImpl implements DummyService {
 
     }
 }
+

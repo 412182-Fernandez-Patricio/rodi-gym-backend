@@ -1,4 +1,4 @@
-package ar.edu.utn.frc.tup.piii.entities;
+package ar.edu.utn.frc.tup.rodigym.entities;
 
 import jakarta.persistence.*;
 
@@ -10,3 +10,4 @@ public class DummyEntity {
     private Long id;
     private String dummy;
 }
+

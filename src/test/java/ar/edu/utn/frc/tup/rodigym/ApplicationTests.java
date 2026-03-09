@@ -1,4 +1,4 @@
-package ar.edu.utn.frc.tup.piii;
+package ar.edu.utn.frc.tup.rodigym;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,3 +11,4 @@ class ApplicationTests {
 	}
 
 }
+

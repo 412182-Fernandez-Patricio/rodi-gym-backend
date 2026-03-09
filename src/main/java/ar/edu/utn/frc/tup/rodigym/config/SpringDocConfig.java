@@ -1,4 +1,4 @@
-package ar.edu.utn.frc.tup.piii.config;
+package ar.edu.utn.frc.tup.rodigym.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.core.jackson.ModelResolver;
@@ -43,3 +43,4 @@ public class SpringDocConfig {
     @Bean
     public ModelResolver modelResolver(ObjectMapper objectMapper){return new ModelResolver(objectMapper);}
 }
+

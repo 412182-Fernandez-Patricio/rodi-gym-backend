@@ -1,6 +1,6 @@
-package ar.edu.utn.frc.tup.piii.services;
+package ar.edu.utn.frc.tup.rodigym.services;
 
-import ar.edu.utn.frc.tup.piii.models.Dummy;
+import ar.edu.utn.frc.tup.rodigym.models.Dummy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,3 +19,4 @@ public interface DummyService {
     void deleteDummy(Dummy dummy);
 
 }
+
