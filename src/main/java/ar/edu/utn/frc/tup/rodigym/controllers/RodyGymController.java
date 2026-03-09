@@ -4,6 +4,7 @@ import ar.edu.utn.frc.tup.rodigym.dtos.DummyDto;
 import ar.edu.utn.frc.tup.rodigym.models.Dummy;
 import ar.edu.utn.frc.tup.rodigym.services.DummyService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,11 @@ public class RodyGymController {
 
     public RodyGymController(DummyService dummyService) {
         this.dummyService = dummyService;
+    }
+
+    @GetMapping("/ping")
+    public ResponseEntity<String> ping(){
+        return ResponseEntity.ok("PONG");
     }
 
     public ResponseEntity<DummyDto> getDummyList(){
