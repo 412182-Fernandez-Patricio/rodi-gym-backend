@@ -6,6 +6,7 @@ import ar.edu.utn.frc.tup.rodigym.dtos.MemberResponseDto;
 import ar.edu.utn.frc.tup.rodigym.models.Member;
 import ar.edu.utn.frc.tup.rodigym.services.DummyService;
 import ar.edu.utn.frc.tup.rodigym.services.MemberService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class MemberController {
     }
 
     @PostMapping("")
-    public ResponseEntity<MemberResponseDto> createMember(@RequestBody MemberCreateDto memberCreateDto){
+    public ResponseEntity<MemberResponseDto> createMember(@Valid @RequestBody MemberCreateDto memberCreateDto){
         Member member = memberService.createMember(memberCreateDto);
         MemberResponseDto memberResponseDto = modelMapper.map(member, MemberResponseDto.class);
         return ResponseEntity.ok(memberResponseDto);
