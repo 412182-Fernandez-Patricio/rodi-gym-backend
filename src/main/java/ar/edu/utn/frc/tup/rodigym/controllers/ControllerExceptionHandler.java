@@ -11,9 +11,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
+/**
+ * Global exception handler for all controllers.
+ * Intercepts specific exceptions and formats them into a consistent ErrorApi structure.
+ */
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
+    /**
+     * Catches any unhandled exception and returns a 500 Internal Server Error.
+     * @param e The exception caught.
+     * @return A response entity with error details.
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorApi> handleError(Exception e) {
         ErrorApi error = ErrorApi.builder()
@@ -25,6 +34,11 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
+    /**
+     * Handles exceptions when an entity is not found in the database.
+     * @param e The exception containing the missing ID info.
+     * @return A response entity with 404 status.
+     */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorApi> handleEntityNotFoundException(EntityNotFoundException e) {
         ErrorApi error = ErrorApi.builder()
@@ -36,6 +50,12 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    /**
+     * Handles validation errors from @Valid annotated DTOs.
+     * Collects all field errors into a single message string.
+     * @param e Validation exception.
+     * @return A response entity with 400 status.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorApi> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String errors = e.getBindingResult().getFieldErrors().stream()
@@ -51,6 +71,11 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    /**
+     * Handles illegal arguments passed to methods.
+     * @param e The exception caught.
+     * @return A response entity with 400 status.
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorApi> handleIllegalArgumentException(IllegalArgumentException e) {
         ErrorApi error = ErrorApi.builder()

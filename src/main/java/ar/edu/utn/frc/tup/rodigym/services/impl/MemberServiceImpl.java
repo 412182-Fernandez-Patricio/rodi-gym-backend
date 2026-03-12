@@ -16,6 +16,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the MemberService using Spring Data JPA and ModelMapper.
+ * Handles the logic of creating members and linking them to a membership.
+ */
 @Service
 public class MemberServiceImpl implements MemberService {
     @Autowired
@@ -24,6 +28,9 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     * @see MemberService#getMember(Long)
+     */
     @Override
     public Member getMember(Long id) {
         MemberEntity memberEntity = memberRepository.findById(id)
@@ -31,6 +38,9 @@ public class MemberServiceImpl implements MemberService {
         return modelMapper.map(memberEntity, Member.class);
     }
 
+    /**
+     * @see MemberService#getMemberList()
+     */
     @Override
     public List<Member> getMemberList() {
         List<MemberEntity> memberEntities = memberRepository.findAll();
@@ -39,6 +49,12 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Creates a MemberEntity and an associated MembershipEntity.
+     * Sets the default membership to one month starting from today.
+     * Uses Transactional annotation to ensure both are saved correctly.
+     * @see MemberService#createMember(MemberCreateDto)
+     */
     @Override
     @Transactional
     public Member createMember(MemberCreateDto memberCreateDto) {
@@ -57,6 +73,9 @@ public class MemberServiceImpl implements MemberService {
         return modelMapper.map(savedMember, Member.class);
     }
 
+    /**
+     * @see MemberService#updateMember(Member)
+     */
     @Override
     @Transactional
     public Member updateMember(Member member) {
@@ -68,6 +87,9 @@ public class MemberServiceImpl implements MemberService {
         return modelMapper.map(updatedMember, Member.class);
     }
 
+    /**
+     * @see MemberService#deleteMember(Member)
+     */
     @Override
     @Transactional
     public void deleteMember(Member member) {

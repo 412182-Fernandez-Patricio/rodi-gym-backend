@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller for managing gym members.
+ * Provides endpoints for creating, retrieving, and listing members.
+ */
 @RestController
 @RequestMapping("/members")
 public class MemberController {
@@ -25,22 +29,40 @@ public class MemberController {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Simple ping endpoint to check if the controller is active.
+     * @return A "PONG" response.
+     */
     @GetMapping("/ping")
     public ResponseEntity<String> ping(){
         return ResponseEntity.ok("PONG");
     }
 
-
+    /**
+     * Retrieves a specific member by their unique ID.
+     * @param id The unique identifier of the member.
+     * @return The member details.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Member> getMember(@PathVariable Long id){
         return ResponseEntity.ok(memberService.getMember(id));
     }
 
+    /**
+     * Retrieves a list of all registered members.
+     * @return A list of members.
+     */
     @GetMapping("")
     public ResponseEntity<List<Member>> getMemberList(){
         return ResponseEntity.ok(memberService.getMemberList());
     }
 
+    /**
+     * Creates a new member and their associated membership.
+     * Validates input using JSR-303 annotations.
+     * @param memberCreateDto The data for the new member.
+     * @return The created member details as a response DTO.
+     */
     @PostMapping("")
     public ResponseEntity<MemberResponseDto> createMember(@Valid @RequestBody MemberCreateDto memberCreateDto){
         Member member = memberService.createMember(memberCreateDto);
