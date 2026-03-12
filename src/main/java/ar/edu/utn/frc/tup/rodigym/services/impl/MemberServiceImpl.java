@@ -58,6 +58,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public Member createMember(MemberCreateDto memberCreateDto) {
+        if (memberRepository.existsById(memberCreateDto.getId())) {
+            throw new IllegalArgumentException("Member already exists with id: " + memberCreateDto.getId());
+        }
+
         MemberEntity memberEntity = modelMapper.map(memberCreateDto, MemberEntity.class);
         
         MembershipEntity membershipEntity = new MembershipEntity();
