@@ -44,8 +44,10 @@ public class MemberController {
      * @return The member details.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Member> getMember(@PathVariable Long id){
-        return ResponseEntity.ok(memberService.getMember(id));
+    public ResponseEntity<MemberResponseDto> getMember(@PathVariable Long id){
+        Member member = memberService.getMember(id);
+        MemberResponseDto memberResponseDto = modelMapper.map(member, MemberResponseDto.class);
+        return ResponseEntity.ok(memberResponseDto);
     }
 
     /**
@@ -53,8 +55,12 @@ public class MemberController {
      * @return A list of members.
      */
     @GetMapping("")
-    public ResponseEntity<List<Member>> getMemberList(){
-        return ResponseEntity.ok(memberService.getMemberList());
+    public ResponseEntity<List<MemberResponseDto>> getMemberList(){
+        List<Member> members = memberService.getMemberList();
+        List<MemberResponseDto> memberResponseDtos = members.stream()
+                .map(member -> modelMapper.map(member, MemberResponseDto.class))
+                .toList();
+        return ResponseEntity.ok(memberResponseDtos);
     }
 
     /**
