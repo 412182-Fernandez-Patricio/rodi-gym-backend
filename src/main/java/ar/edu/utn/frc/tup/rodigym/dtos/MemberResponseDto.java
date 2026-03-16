@@ -15,5 +15,6 @@ public class MemberResponseDto {
     private String lastName;
     @JsonProperty("phone_number")
     private String phoneNumber;
+    private Boolean status;
 }
 

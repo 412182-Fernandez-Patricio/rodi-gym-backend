@@ -12,6 +12,7 @@ public class Member {
     String name;
     String lastName;
     String phoneNumber;
+    Boolean status;
     Membership membership;
 }
 

@@ -24,6 +24,9 @@ public class MemberEntity {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
+    @Column(name = "status", nullable = false)
+    private Boolean status;
+
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private MembershipEntity membership;
 }
