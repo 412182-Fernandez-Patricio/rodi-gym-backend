@@ -86,7 +86,10 @@ public class MemberServiceImpl implements MemberService {
         MemberEntity memberEntity = memberRepository.findById(member.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + member.getId()));
         
-        modelMapper.map(member, memberEntity);
+        memberEntity.setName(member.getName());
+        memberEntity.setLastName(member.getLastName());
+        memberEntity.setPhoneNumber(member.getPhoneNumber());
+        
         MemberEntity updatedMember = memberRepository.save(memberEntity);
         return modelMapper.map(updatedMember, Member.class);
     }

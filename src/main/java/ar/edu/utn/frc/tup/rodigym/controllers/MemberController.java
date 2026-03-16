@@ -3,6 +3,7 @@ package ar.edu.utn.frc.tup.rodigym.controllers;
 
 import ar.edu.utn.frc.tup.rodigym.dtos.MemberCreateDto;
 import ar.edu.utn.frc.tup.rodigym.dtos.MemberResponseDto;
+import ar.edu.utn.frc.tup.rodigym.dtos.MemberUpdateDto;
 import ar.edu.utn.frc.tup.rodigym.models.Member;
 import ar.edu.utn.frc.tup.rodigym.services.DummyService;
 import ar.edu.utn.frc.tup.rodigym.services.MemberService;
@@ -75,5 +76,15 @@ public class MemberController {
         MemberResponseDto memberResponseDto = modelMapper.map(member, MemberResponseDto.class);
         return ResponseEntity.ok(memberResponseDto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MemberResponseDto> updateMember(@PathVariable Long id, @Valid @RequestBody MemberUpdateDto memberUpdateDto){
+        Member member = modelMapper.map(memberUpdateDto, Member.class);
+        member.setId(id);
+        Member updatedMember = memberService.updateMember(member);
+        MemberResponseDto updatedMemberDto = modelMapper.map(updatedMember, MemberResponseDto.class);
+        return ResponseEntity.ok(updatedMemberDto);
+    }
+
 }
 
