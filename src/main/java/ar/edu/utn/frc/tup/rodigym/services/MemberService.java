@@ -45,9 +45,10 @@ public interface MemberService {
     /**
      * Deletes a member from the system.
      * Cascades the deletion to their associated membership.
-     * @param member The member model to delete.
+     * @param id The member id to delete.
+     * @return the deleted member
      */
-    void deleteMember(Member member);
+    Member deleteMember(Long id);
 
 }
 

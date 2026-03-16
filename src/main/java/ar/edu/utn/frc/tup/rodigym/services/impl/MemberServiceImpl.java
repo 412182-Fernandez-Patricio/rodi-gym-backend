@@ -63,16 +63,17 @@ public class MemberServiceImpl implements MemberService {
         }
 
         MemberEntity memberEntity = modelMapper.map(memberCreateDto, MemberEntity.class);
-        
+        memberEntity.setStatus(true); // Default status for new members
+
         MembershipEntity membershipEntity = new MembershipEntity();
         membershipEntity.setStartDate(LocalDate.now());
         membershipEntity.setExpirationDate(LocalDate.now().plusMonths(1));
         membershipEntity.setPrice(0.0); // Default price, could be changed later
-        
+
         // Linking both sides for the bidirectional relationship
         membershipEntity.setMember(memberEntity);
         memberEntity.setMembership(membershipEntity);
-        
+
         MemberEntity savedMember = memberRepository.save(memberEntity);
         return modelMapper.map(savedMember, Member.class);
     }
@@ -85,22 +86,30 @@ public class MemberServiceImpl implements MemberService {
     public Member updateMember(Member member) {
         MemberEntity memberEntity = memberRepository.findById(member.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + member.getId()));
-        
+
         memberEntity.setName(member.getName());
         memberEntity.setLastName(member.getLastName());
         memberEntity.setPhoneNumber(member.getPhoneNumber());
-        
+
         MemberEntity updatedMember = memberRepository.save(memberEntity);
         return modelMapper.map(updatedMember, Member.class);
     }
 
     /**
-     * @see MemberService#deleteMember(Member)
+     * @see MemberService#deleteMember(Long)
      */
     @Override
     @Transactional
-    public void deleteMember(Member member) {
-        memberRepository.deleteById(member.getId());
+    public Member deleteMember(Long id) {
+        MemberEntity memberEntity = memberRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + id));
+
+        if (!memberEntity.getStatus()){
+            throw new IllegalArgumentException("Member is not active");
+        }
+        memberEntity.setStatus(false);
+        MemberEntity deletedMember = memberRepository.save(memberEntity);
+        return modelMapper.map(deletedMember, Member.class);
     }
 }
 
