@@ -86,5 +86,11 @@ public class MemberController {
         return ResponseEntity.ok(updatedMemberDto);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MemberResponseDto> deleteMember(@PathVariable Long id){
+        Member deleteMember = memberService.deleteMember(id);
+        MemberResponseDto deletedMemberDto = modelMapper.map(deleteMember, MemberResponseDto.class);
+        return ResponseEntity.ok(deletedMemberDto);
+    }
 }
 
