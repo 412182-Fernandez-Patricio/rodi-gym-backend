@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final ModelMapper modelMapper;
-    private MemberService memberService;
+    private final MemberService memberService;
 
     /**
      * Constructs a new MemberController.
