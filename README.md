@@ -39,3 +39,19 @@ RODI GYM es un sistema de gestión simplificado diseñado específicamente para 
 * **Concepto:** Simplicidad y accesibilidad (similar a Google Forms).
 * **Tipografía:** Roboto (16px para cuerpo, 24px para encabezados).
 * **Paleta:** Azul (#3B82F6) como color principal y Verde (#10B981) como secundario.
+
+## 🛠️ Calidad de Código (Checkstyle)
+Para mantener un código limpio y consistente, este proyecto utiliza **Checkstyle** con la configuración de **Google**.
+
+### Cómo usar Checkstyle:
+* **Verificar el código:** Ejecuta el siguiente comando para validar que tu código cumple con las reglas de estilo:
+  ```bash
+  mvn checkstyle:check
+  ```
+* **Generar un reporte HTML:** Si deseas ver un reporte detallado de los errores de estilo, ejecuta:
+  ```bash
+  mvn checkstyle:checkstyle
+  ```
+  El reporte se generará en: `target/site/checkstyle.html`
+
+* **Validación automática:** El proyecto está configurado para ejecutar el check de estilo automáticamente durante la fase de `validate` (parte de `mvn install` o `mvn verify`). Si hay errores de estilo, la compilación fallará.
