@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Data Transfer Object for API error responses.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

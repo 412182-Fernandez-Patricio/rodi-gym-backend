@@ -7,10 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * TODO: JAVADOC.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberCreateDto {
+
     @NotNull(message = "ID is required")
     private Long id;
 

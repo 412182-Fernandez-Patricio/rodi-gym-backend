@@ -2,14 +2,13 @@ package ar.edu.utn.frc.tup.rodigym.controllers;
 
 import ar.edu.utn.frc.tup.rodigym.dtos.ErrorApi;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 /**
  * Global exception handler for all controllers.
@@ -20,6 +19,7 @@ public class ControllerExceptionHandler {
 
     /**
      * Catches any unhandled exception and returns a 500 Internal Server Error.
+     *
      * @param e The exception caught.
      * @return A response entity with error details.
      */
@@ -36,6 +36,7 @@ public class ControllerExceptionHandler {
 
     /**
      * Handles exceptions when an entity is not found in the database.
+     *
      * @param e The exception containing the missing ID info.
      * @return A response entity with 404 status.
      */
@@ -53,11 +54,13 @@ public class ControllerExceptionHandler {
     /**
      * Handles validation errors from @Valid annotated DTOs.
      * Collects all field errors into a single message string.
+     *
      * @param e Validation exception.
      * @return A response entity with 400 status.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorApi> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorApi> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException e) {
         String errors = e.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
@@ -73,6 +76,7 @@ public class ControllerExceptionHandler {
 
     /**
      * Handles illegal arguments passed to methods.
+     *
      * @param e The exception caught.
      * @return A response entity with 400 status.
      */

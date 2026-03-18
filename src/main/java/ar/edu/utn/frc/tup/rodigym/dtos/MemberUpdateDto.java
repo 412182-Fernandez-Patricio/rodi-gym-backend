@@ -7,10 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * TODO: JAVADOC.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberUpdateDto {
+
     private String name;
     @JsonProperty("last_name")
     private String lastName;
