@@ -1,9 +1,12 @@
 package ar.edu.utn.frc.tup.rodigym.entities;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "members")
@@ -29,4 +32,9 @@ public class MemberEntity {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private MembershipEntity membership;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<PaymentEntity> payments;
 }

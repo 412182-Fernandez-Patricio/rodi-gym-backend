@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.rodigym.models;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,6 @@ public class Member {
     String phoneNumber;
     Boolean status;
     Membership membership;
+    List<Payment> payments;
 }
 
