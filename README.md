@@ -35,6 +35,16 @@ RODI GYM es un sistema de gestión simplificado diseñado específicamente para 
 3.  **Resultado Positivo:** Si la membresía está al día, el sistema registra el ingreso, emite un sonido de confirmación y otorga acceso.
 4.  **Resultado Negativo:** Si el DNI no existe o la membresía está vencida, el sistema deniega el acceso y muestra un mensaje de error claro.
 
+## 🏗️ Arquitectura del Módulo de Check-in
+Para mantener la escalabilidad y el principio de responsabilidad única (SRP), el módulo de Check-in se estructura de la siguiente manera:
+
+*   **`CheckinController`**: Punto de entrada exclusivo para la operación de acceso. Recibe el DNI y delega la lógica al servicio.
+*   **`CheckinService`**: Orquestador de la validación. Su función es:
+    1.  Consultar al `MemberService` / `MembershipService` la validez del socio.
+    2.  Si es válido, persistir el registro en `check_ins` (log de auditoría).
+    3.  Gestionar posibles efectos secundarios (notificaciones, logs de denegación).
+*   **Independencia:** Al separar el Check-in de la gestión administrativa de membresías, permitimos que el sistema de acceso evolucione (ej. integración con hardware o QR) sin afectar el núcleo de gestión de socios.
+
 ## 🎨 Guía de Estilo
 * **Concepto:** Simplicidad y accesibilidad (similar a Google Forms).
 * **Tipografía:** Roboto (16px para cuerpo, 24px para encabezados).
