@@ -38,6 +38,11 @@ public class PaymentServiceImpl implements PaymentService {
         MemberEntity memberEntity = memberRepository.findById(paymentCreateDto.getMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + paymentCreateDto.getMemberId()));
 
+        // Check and update member status if inactive
+        if (memberEntity.getStatus() == null || !memberEntity.getStatus()) {
+            memberEntity.setStatus(true);
+        }
+
         // 2. Get price from config
         Double amount = configService.getMonthlyPrice();
 
