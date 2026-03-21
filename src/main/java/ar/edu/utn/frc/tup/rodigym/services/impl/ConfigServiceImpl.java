@@ -21,4 +21,10 @@ public class ConfigServiceImpl implements ConfigService {
                 .map(config -> Double.parseDouble(config.getValue()))
                 .orElse(DEFAULT_PRICE);
     }
+
+    @Override
+    public void saveConfig(String key, String value) {
+        ConfigEntity configEntity = new ConfigEntity(key, value);
+        configRepository.save(configEntity);
+    }
 }
