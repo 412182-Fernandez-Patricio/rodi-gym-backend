@@ -49,22 +49,27 @@ public class PaymentServiceImpl implements PaymentService {
         paymentEntity.setPaymentMethod(paymentCreateDto.getPaymentMethod());
 
         // 4. Update membership expiration
+        LocalDate today = LocalDate.now();
         LocalDate currentExpiration = memberEntity.getMembership().getExpirationDate();
-        // If already expired, start from today. If not, extend from current expiration.
-        LocalDate newExpiration = currentExpiration.isBefore(LocalDate.now()) 
-                ? LocalDate.now().plusMonths(1) 
-                : currentExpiration.plusMonths(1);
+        LocalDate newExpiration;
+
+        if (currentExpiration.isBefore(today)) {
+            // If already expired, the new period starts today
+            memberEntity.getMembership().setStartDate(today);
+            newExpiration = today.plusMonths(1);
+        } else {
+            // If still active, we just extend the existing period by one month
+            newExpiration = currentExpiration.plusMonths(1);
+        }
         
         memberEntity.getMembership().setExpirationDate(newExpiration);
-        memberEntity.getMembership().setPrice(amount); // Optional: keep record of last price paid
+        memberEntity.getMembership().setPrice(amount);
 
         // 5. Save everything (Cascades should handle membership update via memberEntity)
         PaymentEntity savedPayment = paymentRepository.save(paymentEntity);
         memberRepository.save(memberEntity);
 
-        // Map and return
-        Payment response = modelMapper.map(savedPayment, Payment.class);
-        response.setMember(memberEntity.getId()); // ModelMapper might need help with the Long ID
-        return response;
+        // Map and return (Automatic mapping now handles the member ID)
+        return modelMapper.map(savedPayment, Payment.class);
     }
 }
