@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaymentResponseDto {
     private Long id;
-    @JsonProperty("member_id")
-    private Long memberId;
+    @JsonProperty("member")
+    private MemberResponseDto member;
     private Double amount;
     @JsonProperty("payment_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

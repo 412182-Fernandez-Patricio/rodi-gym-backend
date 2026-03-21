@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Payment {
     Long id;
-    Long member;
+    Member member;
     Double amount;
     LocalDateTime paymentDate;
     PaymentMethod paymentMethod;
