@@ -1,7 +1,12 @@
 package ar.edu.utn.frc.tup.rodigym.config;
 
+import ar.edu.utn.frc.tup.rodigym.dtos.MemberResponseDto;
+import ar.edu.utn.frc.tup.rodigym.models.Member;
+import ar.edu.utn.frc.tup.rodigym.models.Membership;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.time.LocalDate;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +25,14 @@ public class MappersConfig {
      */
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper mapper = new ModelMapper();
+        mapper.typeMap(Member.class, MemberResponseDto.class).addMappings(m ->
+                m.using(ctx -> ctx.getSource() == null
+                                ? null
+                                : ((Membership) ctx.getSource()).getExpirationDate())
+                        .<LocalDate>map(Member::getMembership,
+                                MemberResponseDto::setExpirationDate));
+        return mapper;
     }
 
     /**
@@ -45,6 +57,7 @@ public class MappersConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return objectMapper;
     }
 }

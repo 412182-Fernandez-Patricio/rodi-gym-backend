@@ -1,6 +1,7 @@
 package ar.edu.utn.frc.tup.rodigym.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,6 @@ public class MemberResponseDto {
     @JsonProperty("phone_number")
     private String phoneNumber;
     private Boolean status;
+    @JsonProperty("expiration_date")
+    private LocalDate expirationDate;
 }
-
