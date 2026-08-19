@@ -3,16 +3,21 @@ package ar.edu.utn.frc.tup.rodigym.services.impl;
 import ar.edu.utn.frc.tup.rodigym.dtos.PaymentCreateDto;
 import ar.edu.utn.frc.tup.rodigym.entities.MemberEntity;
 import ar.edu.utn.frc.tup.rodigym.entities.PaymentEntity;
+import ar.edu.utn.frc.tup.rodigym.enums.PaymentMethod;
 import ar.edu.utn.frc.tup.rodigym.models.Payment;
 import ar.edu.utn.frc.tup.rodigym.repositories.MemberRepository;
 import ar.edu.utn.frc.tup.rodigym.repositories.PaymentRepository;
 import ar.edu.utn.frc.tup.rodigym.services.ConfigService;
 import ar.edu.utn.frc.tup.rodigym.services.PaymentService;
+import ar.edu.utn.frc.tup.rodigym.specifications.PaymentSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,4 +82,18 @@ public class PaymentServiceImpl implements PaymentService {
         // Map and return (Automatic mapping now handles the member ID)
         return modelMapper.map(savedPayment, Payment.class);
     }
+
+    @Override
+    public Page<Payment> searchPayments(Long memberId, PaymentMethod paymentMethod,
+            LocalDateTime from, LocalDateTime to, Pageable pageable) {
+        Specification<PaymentEntity> specification = Specification.allOf(
+                PaymentSpecification.hasMemberId(memberId),
+                PaymentSpecification.hasPaymentMethod(paymentMethod),
+                PaymentSpecification.paymentDateFrom(from),
+                PaymentSpecification.paymentDateBefore(to));
+
+        return paymentRepository.findAll(specification, pageable)
+                .map(entity -> modelMapper.map(entity, Payment.class));
+    }
+
 }
