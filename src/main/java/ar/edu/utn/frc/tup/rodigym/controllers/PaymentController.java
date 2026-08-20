@@ -34,14 +34,6 @@ public class PaymentController {
     private ModelMapper modelMapper;
 
     /**
-     * Creates a new payment for a member.
-     * The amount and date are calculated on the server.
-     * Updates the member's membership expiration date.
-     *
-     * @param paymentCreateDto the payment details from the request.
-     * @return the created payment details.
-     */
-    /**
      * Busca pagos con filtros opcionales y paginación.
      *
      * <p>Todos los filtros son opcionales: los que no se informan no participan de
@@ -72,6 +64,14 @@ public class PaymentController {
                 payment -> modelMapper.map(payment, PaymentResponseDto.class)));
     }
 
+    /**
+     * Creates a new payment for a member.
+     * The amount and date are calculated on the server.
+     * Updates the member's membership expiration date.
+     *
+     * @param paymentCreateDto the payment details from the request.
+     * @return the created payment details.
+     */
     @PostMapping("")
     public ResponseEntity<PaymentResponseDto> createPayment(@Valid @RequestBody PaymentCreateDto paymentCreateDto) {
         Payment payment = paymentService.createPayment(paymentCreateDto);
