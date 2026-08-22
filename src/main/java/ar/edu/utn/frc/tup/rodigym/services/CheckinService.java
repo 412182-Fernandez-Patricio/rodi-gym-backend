@@ -2,7 +2,10 @@ package ar.edu.utn.frc.tup.rodigym.services;
 
 import ar.edu.utn.frc.tup.rodigym.models.AttendanceDay;
 import ar.edu.utn.frc.tup.rodigym.models.Checkin;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +26,17 @@ public interface CheckinService {
     Checkin performCheckin(Long memberId);
 
     /**
-     * Gets all check-ins.
+     * Busca ingresos aplicando solo los filtros informados.
      *
-     * @return List of check-ins.
+     * @param memberId socio que intentó ingresar, o null.
+     * @param success  true para los permitidos, false para los rechazados, null para ambos.
+     * @param from     fecha desde, inclusive, o null.
+     * @param to       fecha hasta, exclusive, o null.
+     * @param pageable página y orden pedidos.
+     * @return la página de ingresos, con el total para que el cliente sepa si hay más.
      */
-    List<Checkin> getAllCheckins();
+    Page<Checkin> searchCheckins(Long memberId, Boolean success, LocalDateTime from,
+            LocalDateTime to, Pageable pageable);
 
     /**
      * Devuelve los días con actividad de un socio en un mes, agrupando los
