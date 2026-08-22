@@ -1,6 +1,7 @@
 package ar.edu.utn.frc.tup.rodigym.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import ar.edu.utn.frc.tup.rodigym.enums.CheckinReason;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class CheckinResponseDto {
     private LocalDateTime checkinTime;
 
     private Boolean success;
+    private CheckinReason reason;
 
     private String message;
 }

@@ -1,6 +1,9 @@
 package ar.edu.utn.frc.tup.rodigym.entities;
 
+import ar.edu.utn.frc.tup.rodigym.enums.CheckinReason;
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,6 +39,10 @@ public class CheckinEntity {
 
     @Column(name = "success", nullable = false)
     private Boolean success;
+
+    @Column(name = "reason", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CheckinReason reason;
 
     @Column(name = "message")
     private String message;

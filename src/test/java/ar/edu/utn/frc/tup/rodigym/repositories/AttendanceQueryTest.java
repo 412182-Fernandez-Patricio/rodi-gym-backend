@@ -3,6 +3,7 @@ package ar.edu.utn.frc.tup.rodigym.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import ar.edu.utn.frc.tup.rodigym.entities.CheckinEntity;
+import ar.edu.utn.frc.tup.rodigym.enums.CheckinReason;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,7 +40,8 @@ class AttendanceQueryTest {
         borderline.setMember(checkinRepository.findAll().get(0).getMember());
         borderline.setCheckinTime(LocalDateTime.parse("2026-09-01T00:00:00"));
         borderline.setSuccess(true);
-        borderline.setMessage("Access granted");
+        borderline.setReason(CheckinReason.ACCESS_GRANTED);
+        borderline.setMessage(CheckinReason.ACCESS_GRANTED.getMessage());
         checkinRepository.saveAndFlush(borderline);
 
         assertThat(checkinRepository.findForMemberBetween(
