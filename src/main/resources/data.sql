@@ -64,5 +64,37 @@ INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (2
 INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (29677145, 7500.0, '2026-08-14 19:20:00', 'CASH');
 INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (31555704, 7500.0, '2026-08-16 08:10:00', 'TRANSFER');
 
+-- Insert initial check-ins
+-- Ordenados por fecha: check_ins.id es IDENTITY, asi el id sigue la cronologia.
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-07-01 18:30:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-07-03 18:25:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-07-08 19:00:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-07-10 18:40:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-07-15 18:35:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-07-17 19:05:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-07-22 18:20:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-07-24 18:50:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-01 09:12:00', false, 'Membership expired or not found');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-01 10:20:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-03 18:30:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (26900333, '2026-08-05 09:50:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-05 18:40:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (31222888, '2026-08-06 19:15:00', false, 'Membership expired or not found');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-07 18:25:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (26900333, '2026-08-07 20:00:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-10 18:35:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (28455901, '2026-08-10 19:20:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (33788456, '2026-08-11 08:45:00', false, 'Member is not active');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-12 18:30:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (28455901, '2026-08-12 19:10:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (26900333, '2026-08-12 20:05:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (31222888, '2026-08-13 19:30:00', false, 'Membership expired or not found');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-14 18:20:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (26900333, '2026-08-14 19:45:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-17 18:40:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (28455901, '2026-08-17 19:15:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (30111222, '2026-08-19 18:25:00', true, 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, message) VALUES (28455901, '2026-08-19 19:35:00', true, 'Access granted');
+
 -- Insert config settings
 INSERT INTO config (config_key, config_value) VALUES ('monthly_price', '5000.0');
