@@ -4,6 +4,7 @@ import ar.edu.utn.frc.tup.rodigym.entities.CheckinEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Repository;
  * Repository for CheckinEntity.
  */
 @Repository
-public interface CheckinRepository extends JpaRepository<CheckinEntity, Long> {
+public interface CheckinRepository extends JpaRepository<CheckinEntity, Long>,
+        JpaSpecificationExecutor<CheckinEntity> {
 
     /**
      * Ingresos de un socio dentro de un rango, ordenados cronológicamente.

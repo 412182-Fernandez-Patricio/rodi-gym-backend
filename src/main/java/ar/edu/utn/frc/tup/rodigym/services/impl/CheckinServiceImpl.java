@@ -7,6 +7,7 @@ import ar.edu.utn.frc.tup.rodigym.models.Checkin;
 import ar.edu.utn.frc.tup.rodigym.repositories.CheckinRepository;
 import ar.edu.utn.frc.tup.rodigym.repositories.MemberRepository;
 import ar.edu.utn.frc.tup.rodigym.services.CheckinService;
+import ar.edu.utn.frc.tup.rodigym.specifications.CheckinSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +17,9 @@ import java.util.TreeMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,15 +73,25 @@ public class CheckinServiceImpl implements CheckinService {
     }
 
     @Override
-    public List<Checkin> getAllCheckins() {
-        List<CheckinEntity> checkinEntities = checkinRepository.findAll();
-        return checkinEntities.stream()
-                .map(entity -> {
-                    Checkin checkin = modelMapper.map(entity, Checkin.class);
-                    checkin.setMemberId(entity.getMember().getId());
-                    return checkin;
-                })
-                .collect(Collectors.toList());
+    public Page<Checkin> searchCheckins(Long memberId, Boolean success, LocalDateTime from,
+            LocalDateTime to, Pageable pageable) {
+        Specification<CheckinEntity> specification = Specification.allOf(
+                CheckinSpecification.hasMemberId(memberId),
+                CheckinSpecification.wasSuccessful(success),
+                CheckinSpecification.checkinTimeFrom(from),
+                CheckinSpecification.checkinTimeBefore(to));
+
+        return checkinRepository.findAll(specification, pageable).map(this::toModel);
+    }
+
+    /**
+     * El memberId se asigna a mano porque el modelo lo tiene plano y la entidad lo
+     * guarda dentro del socio.
+     */
+    private Checkin toModel(CheckinEntity entity) {
+        Checkin checkin = modelMapper.map(entity, Checkin.class);
+        checkin.setMemberId(entity.getMember().getId());
+        return checkin;
     }
 
     @Override
