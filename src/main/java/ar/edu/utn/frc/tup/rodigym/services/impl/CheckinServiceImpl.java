@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.rodigym.services.impl;
 
 import ar.edu.utn.frc.tup.rodigym.entities.CheckinEntity;
 import ar.edu.utn.frc.tup.rodigym.entities.MemberEntity;
+import ar.edu.utn.frc.tup.rodigym.models.AttendanceDay;
 import ar.edu.utn.frc.tup.rodigym.models.Checkin;
 import ar.edu.utn.frc.tup.rodigym.repositories.CheckinRepository;
 import ar.edu.utn.frc.tup.rodigym.repositories.MemberRepository;
@@ -9,6 +10,9 @@ import ar.edu.utn.frc.tup.rodigym.services.CheckinService;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -73,6 +77,31 @@ public class CheckinServiceImpl implements CheckinService {
                     checkin.setMemberId(entity.getMember().getId());
                     return checkin;
                 })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AttendanceDay> getAttendance(Long memberId, YearMonth month) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new EntityNotFoundException("Member not found with DNI: " + memberId);
+        }
+
+        List<CheckinEntity> checkins = checkinRepository.findForMemberBetween(
+                memberId,
+                month.atDay(1).atStartOfDay(),
+                month.plusMonths(1).atDay(1).atStartOfDay());
+
+        Map<java.time.LocalDate, List<CheckinEntity>> byDay = checkins.stream()
+                .collect(Collectors.groupingBy(
+                        checkin -> checkin.getCheckinTime().toLocalDate(),
+                        TreeMap::new,
+                        Collectors.toList()));
+
+        return byDay.entrySet().stream()
+                .map(entry -> new AttendanceDay(
+                        entry.getKey(),
+                        entry.getValue().stream().anyMatch(CheckinEntity::getSuccess),
+                        entry.getValue().size()))
                 .collect(Collectors.toList());
     }
 }
