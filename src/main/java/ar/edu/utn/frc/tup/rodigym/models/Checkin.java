@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.rodigym.models;
 
+import ar.edu.utn.frc.tup.rodigym.enums.CheckinReason;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,5 +17,6 @@ public class Checkin {
     private Long memberId;
     private LocalDateTime checkinTime;
     private Boolean success;
+    private CheckinReason reason;
     private String message;
 }

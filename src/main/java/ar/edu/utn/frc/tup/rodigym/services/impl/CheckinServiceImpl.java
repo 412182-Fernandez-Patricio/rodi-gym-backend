@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.rodigym.services.impl;
 
 import ar.edu.utn.frc.tup.rodigym.entities.CheckinEntity;
 import ar.edu.utn.frc.tup.rodigym.entities.MemberEntity;
+import ar.edu.utn.frc.tup.rodigym.enums.CheckinReason;
 import ar.edu.utn.frc.tup.rodigym.models.AttendanceDay;
 import ar.edu.utn.frc.tup.rodigym.models.Checkin;
 import ar.edu.utn.frc.tup.rodigym.repositories.CheckinRepository;
@@ -54,17 +55,10 @@ public class CheckinServiceImpl implements CheckinService {
         checkinEntity.setMember(memberEntity);
         checkinEntity.setCheckinTime(LocalDateTime.now());
 
-        if (!memberEntity.getStatus()) {
-            checkinEntity.setSuccess(false);
-            checkinEntity.setMessage("Member is not active");
-        } else if (memberEntity.getMembership() == null
-                || memberEntity.getMembership().getExpirationDate().isBefore(LocalDate.now())) {
-            checkinEntity.setSuccess(false);
-            checkinEntity.setMessage("Membership expired or not found");
-        } else {
-            checkinEntity.setSuccess(true);
-            checkinEntity.setMessage("Access granted");
-        }
+        CheckinReason reason = resolveReason(memberEntity);
+        checkinEntity.setReason(reason);
+        checkinEntity.setSuccess(reason.isSuccessful());
+        checkinEntity.setMessage(reason.getMessage());
 
         CheckinEntity savedCheckin = checkinRepository.save(checkinEntity);
         Checkin checkinModel = modelMapper.map(savedCheckin, Checkin.class);
@@ -117,5 +111,24 @@ public class CheckinServiceImpl implements CheckinService {
                         entry.getValue().stream().anyMatch(CheckinEntity::getSuccess),
                         entry.getValue().size()))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Decide si el socio puede entrar y por qué.
+     *
+     * <p>El motivo manda: de él se derivan el resultado y el mensaje, así no pueden
+     * quedar desalineados entre sí.</p>
+     */
+    private CheckinReason resolveReason(MemberEntity member) {
+        if (!member.getStatus()) {
+            return CheckinReason.MEMBER_INACTIVE;
+        }
+
+        if (member.getMembership() == null
+                || member.getMembership().getExpirationDate().isBefore(LocalDate.now())) {
+            return CheckinReason.MEMBERSHIP_EXPIRED;
+        }
+
+        return CheckinReason.ACCESS_GRANTED;
     }
 }

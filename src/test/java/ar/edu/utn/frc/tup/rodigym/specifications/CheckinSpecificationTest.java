@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import ar.edu.utn.frc.tup.rodigym.entities.CheckinEntity;
 import ar.edu.utn.frc.tup.rodigym.entities.MemberEntity;
+import ar.edu.utn.frc.tup.rodigym.enums.CheckinReason;
 import ar.edu.utn.frc.tup.rodigym.repositories.CheckinRepository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -126,11 +127,15 @@ class CheckinSpecificationTest {
     }
 
     private void persistCheckin(MemberEntity owner, String time, boolean success) {
+        CheckinReason reason =
+                success ? CheckinReason.ACCESS_GRANTED : CheckinReason.MEMBERSHIP_EXPIRED;
+
         CheckinEntity checkin = new CheckinEntity();
         checkin.setMember(owner);
         checkin.setCheckinTime(LocalDateTime.parse(time));
         checkin.setSuccess(success);
-        checkin.setMessage(success ? "Access granted" : "Membership expired or not found");
+        checkin.setReason(reason);
+        checkin.setMessage(reason.getMessage());
         entityManager.persist(checkin);
     }
 }
