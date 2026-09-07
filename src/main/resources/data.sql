@@ -1,3 +1,7 @@
+-- Datos de prueba. Las fechas son relativas al arranque (CURRENT_DATE), no
+-- absolutas: si no, envejecen y las pantallas que filtran por hoy o por el
+-- mes en curso aparecen vacias a las pocas semanas.
+
 -- Insert initial members
 INSERT INTO members (id, name, last_name, phone_number, status) VALUES (12345678, 'Juan', 'Perez', '1122334455', true);
 INSERT INTO members (id, name, last_name, phone_number, status) VALUES (87654321, 'Maria', 'Gomez', '1199887766', true);
@@ -14,87 +18,90 @@ INSERT INTO members (id, name, last_name, phone_number, status) VALUES (33788456
 INSERT INTO members (id, name, last_name, phone_number, status) VALUES (27833502, 'Carla', 'Dominguez', '3512287655', false);
 
 -- Insert initial memberships (linked to members by ID)
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (12345678, '2026-01-01', '2026-02-01', 5000.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (87654321, '2026-02-15', '2026-03-15', 5500.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (11223344, '2026-03-01', '2026-04-01', 6000.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (30111222, '2026-08-01', '2026-09-01', 7000.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (28455901, '2026-08-10', '2026-09-10', 7000.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (26900333, '2026-08-05', '2026-09-05', 7000.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (29677145, '2026-08-14', '2026-09-14', 7500.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (31555704, '2026-08-16', '2026-09-16', 7500.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (31222888, '2026-05-10', '2026-06-10', 6500.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (35044719, '2026-06-22', '2026-07-22', 6500.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (33788456, '2026-07-30', '2026-08-30', 7000.0);
-INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (27833502, '2026-02-12', '2026-03-12', 5500.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (27833502, DATEADD('DAY', -200, CURRENT_DATE), DATEADD('DAY', -170, CURRENT_DATE), 5500.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (11223344, DATEADD('DAY', -160, CURRENT_DATE), DATEADD('DAY', -130, CURRENT_DATE), 6000.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (12345678, DATEADD('DAY', -125, CURRENT_DATE), DATEADD('DAY', -95, CURRENT_DATE), 5000.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (87654321, DATEADD('DAY', -90, CURRENT_DATE), DATEADD('DAY', -60, CURRENT_DATE), 5500.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (35044719, DATEADD('DAY', -78, CURRENT_DATE), DATEADD('DAY', -48, CURRENT_DATE), 6500.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (31222888, DATEADD('DAY', -50, CURRENT_DATE), DATEADD('DAY', -20, CURRENT_DATE), 6500.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (26900333, DATEADD('DAY', -21, CURRENT_DATE), DATEADD('DAY', 9, CURRENT_DATE), 7000.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (33788456, DATEADD('DAY', -20, CURRENT_DATE), DATEADD('DAY', 10, CURRENT_DATE), 7000.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (28455901, DATEADD('DAY', -16, CURRENT_DATE), DATEADD('DAY', 14, CURRENT_DATE), 7000.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (29677145, DATEADD('DAY', -12, CURRENT_DATE), DATEADD('DAY', 18, CURRENT_DATE), 7500.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (30111222, DATEADD('DAY', -6, CURRENT_DATE), DATEADD('DAY', 24, CURRENT_DATE), 7000.0);
+INSERT INTO memberships (id, start_date, expiration_date, price) VALUES (31555704, DATEADD('DAY', -4, CURRENT_DATE), DATEADD('DAY', 26, CURRENT_DATE), 7500.0);
 
 -- Insert initial payments
 -- Ordenados por fecha: payments.id es IDENTITY, asi el id sigue la cronologia.
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5000.0, '2025-09-01 10:15:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5000.0, '2025-10-01 10:20:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5000.0, '2025-11-01 09:40:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5000.0, '2025-12-01 18:05:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (12345678, 5000.0, '2026-01-01 10:00:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5500.0, '2026-01-01 11:10:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5500.0, '2026-02-01 09:25:00', 'DEBIT');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (12345678, 5000.0, '2026-02-01 11:30:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (27833502, 5500.0, '2026-02-12 12:50:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (87654321, 5500.0, '2026-02-15 09:15:00', 'DEBIT');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5500.0, '2026-03-01 10:05:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (11223344, 6000.0, '2026-03-01 18:45:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 5500.0, '2026-03-10 17:30:00', 'DEBIT');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 6500.0, '2026-04-01 09:50:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (31222888, 6500.0, '2026-04-10 17:00:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 6500.0, '2026-04-10 18:20:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 6500.0, '2026-05-01 10:30:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (31222888, 6500.0, '2026-05-10 17:20:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 6500.0, '2026-05-10 19:00:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (35044719, 6500.0, '2026-05-22 16:15:00', 'DEBIT');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 6500.0, '2026-06-01 11:05:00', 'DEBIT');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (26900333, 6500.0, '2026-06-05 09:45:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 6500.0, '2026-06-10 18:40:00', 'DEBIT');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (35044719, 6500.0, '2026-06-22 16:40:00', 'DEBIT');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 7000.0, '2026-07-01 10:15:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (26900333, 7000.0, '2026-07-05 08:55:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 7000.0, '2026-07-10 19:10:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (29677145, 7000.0, '2026-07-14 20:00:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (33788456, 7000.0, '2026-07-30 11:25:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 7000.0, '2026-08-01 10:05:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (26900333, 7000.0, '2026-08-05 09:45:00', 'TRANSFER');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 7000.0, '2026-08-10 18:30:00', 'DEBIT');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (29677145, 7500.0, '2026-08-14 19:20:00', 'CASH');
-INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (31555704, 7500.0, '2026-08-16 08:10:00', 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5000.0, DATEADD('MINUTE', 632, DATEADD('DAY', -336, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5000.0, DATEADD('MINUTE', 625, DATEADD('DAY', -306, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5000.0, DATEADD('MINUTE', 618, DATEADD('DAY', -276, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5000.0, DATEADD('MINUTE', 611, DATEADD('DAY', -246, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5000.0, DATEADD('MINUTE', 654, DATEADD('DAY', -216, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (27833502, 5500.0, DATEADD('MINUTE', 605, DATEADD('DAY', -200, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5500.0, DATEADD('MINUTE', 647, DATEADD('DAY', -186, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 5500.0, DATEADD('MINUTE', 640, DATEADD('DAY', -166, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (11223344, 6000.0, DATEADD('MINUTE', 605, DATEADD('DAY', -160, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 5500.0, DATEADD('MINUTE', 640, DATEADD('DAY', -156, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (12345678, 5000.0, DATEADD('MINUTE', 612, DATEADD('DAY', -155, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 6000.0, DATEADD('MINUTE', 633, DATEADD('DAY', -136, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 6000.0, DATEADD('MINUTE', 633, DATEADD('DAY', -126, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (12345678, 5000.0, DATEADD('MINUTE', 605, DATEADD('DAY', -125, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (35044719, 6000.0, DATEADD('MINUTE', 612, DATEADD('DAY', -108, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 6000.0, DATEADD('MINUTE', 626, DATEADD('DAY', -106, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 6000.0, DATEADD('MINUTE', 626, DATEADD('DAY', -96, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (87654321, 5500.0, DATEADD('MINUTE', 605, DATEADD('DAY', -90, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (26900333, 6500.0, DATEADD('MINUTE', 619, DATEADD('DAY', -81, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (31222888, 6000.0, DATEADD('MINUTE', 612, DATEADD('DAY', -80, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (35044719, 6500.0, DATEADD('MINUTE', 605, DATEADD('DAY', -78, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 6500.0, DATEADD('MINUTE', 619, DATEADD('DAY', -76, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 6500.0, DATEADD('MINUTE', 619, DATEADD('DAY', -66, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (26900333, 6500.0, DATEADD('MINUTE', 612, DATEADD('DAY', -51, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (31222888, 6500.0, DATEADD('MINUTE', 605, DATEADD('DAY', -50, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 6500.0, DATEADD('MINUTE', 612, DATEADD('DAY', -46, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (29677145, 7000.0, DATEADD('MINUTE', 612, DATEADD('DAY', -42, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 6500.0, DATEADD('MINUTE', 612, DATEADD('DAY', -36, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (26900333, 7000.0, DATEADD('MINUTE', 605, DATEADD('DAY', -21, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (33788456, 7000.0, DATEADD('MINUTE', 605, DATEADD('DAY', -20, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (28455901, 7000.0, DATEADD('MINUTE', 605, DATEADD('DAY', -16, CURRENT_DATE)), 'TRANSFER');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (29677145, 7500.0, DATEADD('MINUTE', 605, DATEADD('DAY', -12, CURRENT_DATE)), 'DEBIT');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (30111222, 7000.0, DATEADD('MINUTE', 605, DATEADD('DAY', -6, CURRENT_DATE)), 'CASH');
+INSERT INTO payments (member_id, amount, payment_date, payment_method) VALUES (31555704, 7500.0, DATEADD('MINUTE', 605, DATEADD('DAY', -4, CURRENT_DATE)), 'CASH');
 
 -- Insert initial check-ins
 -- Ordenados por fecha: check_ins.id es IDENTITY, asi el id sigue la cronologia.
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-07-01 18:30:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-07-03 18:25:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-07-08 19:00:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-07-10 18:40:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-07-15 18:35:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-07-17 19:05:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-07-22 18:20:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-07-24 18:50:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-01 09:12:00', false, 'MEMBERSHIP_EXPIRED', 'Membership expired or not found');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-01 10:20:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-03 18:30:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (26900333, '2026-08-05 09:50:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-05 18:40:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (31222888, '2026-08-06 19:15:00', false, 'MEMBERSHIP_EXPIRED', 'Membership expired or not found');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-07 18:25:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (26900333, '2026-08-07 20:00:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-10 18:35:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, '2026-08-10 19:20:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (33788456, '2026-08-11 08:45:00', false, 'MEMBER_INACTIVE', 'Member is not active');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-12 18:30:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, '2026-08-12 19:10:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (26900333, '2026-08-12 20:05:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (31222888, '2026-08-13 19:30:00', false, 'MEMBERSHIP_EXPIRED', 'Membership expired or not found');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-14 18:20:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (26900333, '2026-08-14 19:45:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-17 18:40:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, '2026-08-17 19:15:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, '2026-08-19 18:25:00', true, 'ACCESS_GRANTED', 'Access granted');
-INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, '2026-08-19 19:35:00', true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1115, DATEADD('DAY', -42, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1100, DATEADD('DAY', -38, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1120, DATEADD('DAY', -33, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1110, DATEADD('DAY', -28, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, DATEADD('MINUTE', 1130, DATEADD('DAY', -24, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1100, DATEADD('DAY', -21, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (29677145, DATEADD('MINUTE', 1140, DATEADD('DAY', -19, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1115, DATEADD('DAY', -16, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, DATEADD('MINUTE', 1105, DATEADD('DAY', -14, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1125, DATEADD('DAY', -12, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (26900333, DATEADD('MINUTE', 1155, DATEADD('DAY', -12, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1090, DATEADD('DAY', -9, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, DATEADD('MINUTE', 1110, DATEADD('DAY', -7, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 552, DATEADD('DAY', -6, CURRENT_DATE)), false, 'MEMBERSHIP_EXPIRED', 'Membership expired or not found');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 620, DATEADD('DAY', -6, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1095, DATEADD('DAY', -5, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (26900333, DATEADD('MINUTE', 1165, DATEADD('DAY', -5, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (31555704, DATEADD('MINUTE', 470, DATEADD('DAY', -3, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, DATEADD('MINUTE', 1120, DATEADD('DAY', -3, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 1100, DATEADD('DAY', -2, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (29677145, DATEADD('MINUTE', 1150, DATEADD('DAY', -2, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 480, DATEADD('DAY', -1, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, DATEADD('MINUTE', 1110, DATEADD('DAY', -1, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (26900333, DATEADD('MINUTE', 1140, DATEADD('DAY', -1, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (31555704, DATEADD('MINUTE', 425, DATEADD('DAY', 0, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (28455901, DATEADD('MINUTE', 460, DATEADD('DAY', 0, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (31222888, DATEADD('MINUTE', 495, DATEADD('DAY', 0, CURRENT_DATE)), false, 'MEMBERSHIP_EXPIRED', 'Membership expired or not found');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (30111222, DATEADD('MINUTE', 530, DATEADD('DAY', 0, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (26900333, DATEADD('MINUTE', 570, DATEADD('DAY', 0, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (33788456, DATEADD('MINUTE', 610, DATEADD('DAY', 0, CURRENT_DATE)), false, 'MEMBER_INACTIVE', 'Member is not active');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (29677145, DATEADD('MINUTE', 685, DATEADD('DAY', 0, CURRENT_DATE)), true, 'ACCESS_GRANTED', 'Access granted');
+INSERT INTO check_ins (member_id, checkin_time, success, reason, message) VALUES (34199827, DATEADD('MINUTE', 760, DATEADD('DAY', 0, CURRENT_DATE)), false, 'MEMBERSHIP_EXPIRED', 'Membership expired or not found');
 
 -- Insert config settings
-INSERT INTO config (config_key, config_value) VALUES ('monthly_price', '5000.0');
+INSERT INTO config (config_key, config_value) VALUES ('monthly_price', '7000.0');
