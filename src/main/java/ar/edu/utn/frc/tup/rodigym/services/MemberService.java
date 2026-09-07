@@ -1,7 +1,10 @@
 package ar.edu.utn.frc.tup.rodigym.services;
 
 import ar.edu.utn.frc.tup.rodigym.dtos.MemberCreateDto;
+import ar.edu.utn.frc.tup.rodigym.enums.MemberStatus;
 import ar.edu.utn.frc.tup.rodigym.models.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +25,14 @@ public interface MemberService {
     Member getMember(Long id);
 
     /**
-     * Retrieves a list of all members currently registered.
-     * @return A list of Member models.
+     * Busca socios aplicando solo los filtros informados.
+     *
+     * @param search   texto a buscar en nombre, apellido o DNI, o null.
+     * @param status   estado con el que se muestra el socio, o null para todos.
+     * @param pageable página y orden pedidos.
+     * @return la página de socios, con el total para que el cliente sepa si hay más.
      */
-    List<Member> getMemberList();
+    Page<Member> searchMembers(String search, MemberStatus status, Pageable pageable);
 
     /**
      * Creates a new member and automatically initializes their membership.

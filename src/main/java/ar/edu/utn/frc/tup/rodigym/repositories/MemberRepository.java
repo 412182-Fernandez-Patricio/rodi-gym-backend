@@ -2,13 +2,15 @@ package ar.edu.utn.frc.tup.rodigym.repositories;
 
 import ar.edu.utn.frc.tup.rodigym.entities.MemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
  * TODO: JAVADOC.
  */
 @Repository
-public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
+public interface MemberRepository extends JpaRepository<MemberEntity, Long>,
+        JpaSpecificationExecutor<MemberEntity> {
 
 }
 
