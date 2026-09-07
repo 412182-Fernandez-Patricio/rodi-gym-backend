@@ -6,7 +6,10 @@ import ar.edu.utn.frc.tup.rodigym.entities.CheckinEntity;
 import ar.edu.utn.frc.tup.rodigym.enums.CheckinReason;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,6 +17,10 @@ import org.springframework.data.domain.Sort;
 
 /**
  * Ejercita la query de asistencia y los invariantes de los check-ins sembrados.
+ *
+ * <p>Todo se calcula desde la fecha de hoy: los datos de prueba también son
+ * relativos, así que fijar un mes concreto haría fallar el test con el correr de
+ * las semanas.</p>
  */
 @DataJpaTest
 class AttendanceQueryTest {
@@ -25,20 +32,25 @@ class AttendanceQueryTest {
 
     @Test
     void shouldReturnOnlyTheRequestedMonthOrderedByTime() {
-        List<CheckinEntity> august = agostoDeAna();
+        YearMonth thisMonth = YearMonth.now();
+        List<CheckinEntity> checkins = ofAnaBetween(
+                thisMonth.atDay(1).atStartOfDay(),
+                thisMonth.plusMonths(1).atDay(1).atStartOfDay());
 
-        assertThat(august).isNotEmpty();
-        assertThat(august)
-                .extracting(checkin -> checkin.getCheckinTime().toLocalDate())
-                .allMatch(date -> date.getMonthValue() == 8 && date.getYear() == 2026);
-        assertThat(august).extracting(CheckinEntity::getCheckinTime).isSorted();
+        assertThat(checkins).isNotEmpty();
+        assertThat(checkins)
+                .extracting(checkin -> YearMonth.from(checkin.getCheckinTime()))
+                .containsOnly(thisMonth);
+        assertThat(checkins).extracting(CheckinEntity::getCheckinTime).isSorted();
     }
 
     @Test
     void shouldLeaveOutTheFirstInstantOfTheNextMonth() {
+        YearMonth thisMonth = YearMonth.now();
+
         CheckinEntity borderline = new CheckinEntity();
         borderline.setMember(checkinRepository.findAll().get(0).getMember());
-        borderline.setCheckinTime(LocalDateTime.parse("2026-09-01T00:00:00"));
+        borderline.setCheckinTime(thisMonth.plusMonths(1).atDay(1).atStartOfDay());
         borderline.setSuccess(true);
         borderline.setReason(CheckinReason.ACCESS_GRANTED);
         borderline.setMessage(CheckinReason.ACCESS_GRANTED.getMessage());
@@ -46,20 +58,34 @@ class AttendanceQueryTest {
 
         assertThat(checkinRepository.findForMemberBetween(
                 borderline.getMember().getId(),
-                LocalDate.parse("2026-08-01").atStartOfDay(),
-                LocalDate.parse("2026-09-01").atStartOfDay()))
+                thisMonth.atDay(1).atStartOfDay(),
+                thisMonth.plusMonths(1).atDay(1).atStartOfDay()))
                 .noneMatch(checkin -> checkin.getId().equals(borderline.getId()));
     }
 
     @Test
-    void shouldSeedADayWithBothAFailedAndASuccessfulAttempt() {
-        List<CheckinEntity> firstOfAugust = agostoDeAna().stream()
-                .filter(checkin -> checkin.getCheckinTime().getDayOfMonth() == 1)
+    void shouldSeedADayHoldingBothAnEntryAndARefusal() {
+        Map<LocalDate, List<CheckinEntity>> byDay = ofAnaBetween(
+                LocalDate.now().minusDays(60).atStartOfDay(),
+                LocalDate.now().plusDays(1).atStartOfDay())
+                .stream()
+                .collect(Collectors.groupingBy(checkin -> checkin.getCheckinTime().toLocalDate()));
+
+        assertThat(byDay.values())
+                .as("un dia con un rechazo y un ingreso, que es el caso raro de la agrupacion")
+                .anyMatch(day -> day.stream().anyMatch(CheckinEntity::getSuccess)
+                        && day.stream().anyMatch(checkin -> !checkin.getSuccess()));
+    }
+
+    @Test
+    void shouldSeedTodaysActivityWithBothOutcomes() {
+        List<CheckinEntity> today = checkinRepository.findAll().stream()
+                .filter(checkin -> checkin.getCheckinTime().toLocalDate().equals(LocalDate.now()))
                 .toList();
 
-        assertThat(firstOfAugust).hasSize(2);
-        assertThat(firstOfAugust).extracting(CheckinEntity::getSuccess)
-                .containsExactly(false, true);
+        assertThat(today).as("la pantalla de ingresos filtra por hoy").isNotEmpty();
+        assertThat(today).anyMatch(CheckinEntity::getSuccess);
+        assertThat(today).anyMatch(checkin -> !checkin.getSuccess());
     }
 
     @Test
@@ -70,10 +96,7 @@ class AttendanceQueryTest {
         assertThat(orderedById).extracting(CheckinEntity::getCheckinTime).isSorted();
     }
 
-    private List<CheckinEntity> agostoDeAna() {
-        return checkinRepository.findForMemberBetween(
-                ANA,
-                LocalDate.parse("2026-08-01").atStartOfDay(),
-                LocalDate.parse("2026-09-01").atStartOfDay());
+    private List<CheckinEntity> ofAnaBetween(LocalDateTime from, LocalDateTime to) {
+        return checkinRepository.findForMemberBetween(ANA, from, to);
     }
 }
