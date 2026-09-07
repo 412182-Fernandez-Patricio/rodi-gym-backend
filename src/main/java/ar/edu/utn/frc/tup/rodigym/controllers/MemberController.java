@@ -1,13 +1,18 @@
 package ar.edu.utn.frc.tup.rodigym.controllers;
 
 import ar.edu.utn.frc.tup.rodigym.dtos.MemberCreateDto;
+import ar.edu.utn.frc.tup.rodigym.dtos.PageResponseDto;
 import ar.edu.utn.frc.tup.rodigym.dtos.MemberResponseDto;
 import ar.edu.utn.frc.tup.rodigym.dtos.MemberUpdateDto;
+import ar.edu.utn.frc.tup.rodigym.enums.MemberStatus;
 import ar.edu.utn.frc.tup.rodigym.models.Member;
 import ar.edu.utn.frc.tup.rodigym.services.MemberService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -64,17 +70,25 @@ public class MemberController {
     }
 
     /**
-     * Retrieves a list of all registered members.
+     * Busca socios con filtros opcionales y paginación.
      *
-     * @return A list of members.
+     * <p>Los filtros que no se informan no participan de la query, así que sin
+     * parámetros devuelve el padrón completo paginado.</p>
+     *
+     * @param search   texto a buscar en nombre, apellido o DNI.
+     * @param status   estado con el que se muestra el socio.
+     * @param pageable página y orden; por defecto 20 ordenados por apellido.
+     * @return la página de socios encontrados.
      */
     @GetMapping("")
-    public ResponseEntity<List<MemberResponseDto>> getMemberList() {
-        List<Member> members = memberService.getMemberList();
-        List<MemberResponseDto> memberResponseDtos = members.stream()
-                .map(member -> modelMapper.map(member, MemberResponseDto.class))
-                .toList();
-        return ResponseEntity.ok(memberResponseDtos);
+    public ResponseEntity<PageResponseDto<MemberResponseDto>> searchMembers(
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "status", required = false) MemberStatus status,
+            @PageableDefault(size = 20, sort = {"lastName", "name"}) Pageable pageable) {
+        Page<Member> members = memberService.searchMembers(search, status, pageable);
+
+        return ResponseEntity.ok(PageResponseDto.from(members,
+                member -> modelMapper.map(member, MemberResponseDto.class)));
     }
 
     /**

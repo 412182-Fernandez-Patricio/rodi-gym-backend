@@ -3,7 +3,9 @@ package ar.edu.utn.frc.tup.rodigym.services.impl;
 import ar.edu.utn.frc.tup.rodigym.dtos.MemberCreateDto;
 import ar.edu.utn.frc.tup.rodigym.entities.MemberEntity;
 import ar.edu.utn.frc.tup.rodigym.entities.MembershipEntity;
+import ar.edu.utn.frc.tup.rodigym.enums.MemberStatus;
 import ar.edu.utn.frc.tup.rodigym.models.Member;
+import ar.edu.utn.frc.tup.rodigym.specifications.MemberSpecification;
 import ar.edu.utn.frc.tup.rodigym.repositories.MemberRepository;
 import ar.edu.utn.frc.tup.rodigym.services.MemberService;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +13,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,12 +46,15 @@ public class MemberServiceImpl implements MemberService {
         return modelMapper.map(memberEntity, Member.class);
     }
 
-    /// @see MemberService#getMemberList()
+    /// @see MemberService#searchMembers(String, MemberStatus, Pageable)
     @Override
-    public List<Member> getMemberList() {
-        List<MemberEntity> memberEntities = memberRepository.findAll();
-        return memberEntities.stream().map(entity -> modelMapper.map(entity, Member.class))
-            .collect(Collectors.toList());
+    public Page<Member> searchMembers(String search, MemberStatus status, Pageable pageable) {
+        Specification<MemberEntity> specification = Specification.allOf(
+                MemberSpecification.matches(search),
+                MemberSpecification.hasStatus(status));
+
+        return memberRepository.findAll(specification, pageable)
+                .map(entity -> modelMapper.map(entity, Member.class));
     }
 
     /**
