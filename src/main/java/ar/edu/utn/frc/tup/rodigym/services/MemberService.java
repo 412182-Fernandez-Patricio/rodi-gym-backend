@@ -35,9 +35,11 @@ public interface MemberService {
     Page<Member> searchMembers(String search, MemberStatus status, Pageable pageable);
 
     /**
-     * Creates a new member and automatically initializes their membership.
-     * Both entities will share the same ID.
+     * Da de alta un socio activo y sin membresía: la crea su primer pago.
+     *
      * @param memberCreateDto The input data for member registration.
+     * @throws ar.edu.utn.frc.tup.rodigym.exceptions.MemberAlreadyExistsException
+     *         si ya hay un socio con ese DNI, aunque esté dado de baja.
      * @return The newly created Member model.
      */
     Member createMember(MemberCreateDto memberCreateDto);

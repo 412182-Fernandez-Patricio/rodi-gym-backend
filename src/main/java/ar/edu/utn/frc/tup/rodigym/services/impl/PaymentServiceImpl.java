@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.rodigym.services.impl;
 
 import ar.edu.utn.frc.tup.rodigym.dtos.PaymentCreateDto;
 import ar.edu.utn.frc.tup.rodigym.entities.MemberEntity;
+import ar.edu.utn.frc.tup.rodigym.entities.MembershipEntity;
 import ar.edu.utn.frc.tup.rodigym.entities.PaymentEntity;
 import ar.edu.utn.frc.tup.rodigym.enums.PaymentMethod;
 import ar.edu.utn.frc.tup.rodigym.models.Payment;
@@ -60,6 +61,17 @@ public class PaymentServiceImpl implements PaymentService {
 
         // 4. Update membership expiration
         LocalDate today = LocalDate.now();
+
+        // El alta no crea membresía: la crea el primer pago, arrancando hoy. Nace
+        // venciendo hoy para que el cálculo de abajo la lleve a hoy + 1 mes.
+        if (memberEntity.getMembership() == null) {
+            MembershipEntity membershipEntity = new MembershipEntity();
+            membershipEntity.setStartDate(today);
+            membershipEntity.setExpirationDate(today);
+            membershipEntity.setMember(memberEntity);
+            memberEntity.setMembership(membershipEntity);
+        }
+
         LocalDate currentExpiration = memberEntity.getMembership().getExpirationDate();
         LocalDate newExpiration;
 

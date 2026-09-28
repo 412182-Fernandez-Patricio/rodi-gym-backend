@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -92,8 +93,10 @@ public class MemberController {
     }
 
     /**
-     * Creates a new member and their associated membership. Validates input using JSR-303
-     * annotations.
+     * Da de alta un socio, sin membresía hasta su primer pago.
+     *
+     * <p>Responde 201 sin header Location: el proxy del frontend reescribe el
+     * prefijo de la URL, y el cliente ya conoce el DNI.</p>
      *
      * @param memberCreateDto The data for the new member.
      * @return The created member details as a response DTO.
@@ -103,7 +106,7 @@ public class MemberController {
             @Valid @RequestBody MemberCreateDto memberCreateDto) {
         Member member = memberService.createMember(memberCreateDto);
         MemberResponseDto memberResponseDto = modelMapper.map(member, MemberResponseDto.class);
-        return ResponseEntity.ok(memberResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberResponseDto);
     }
 
     /**

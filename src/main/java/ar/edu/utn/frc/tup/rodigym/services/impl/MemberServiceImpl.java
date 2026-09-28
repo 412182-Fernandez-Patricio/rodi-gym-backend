@@ -2,14 +2,13 @@ package ar.edu.utn.frc.tup.rodigym.services.impl;
 
 import ar.edu.utn.frc.tup.rodigym.dtos.MemberCreateDto;
 import ar.edu.utn.frc.tup.rodigym.entities.MemberEntity;
-import ar.edu.utn.frc.tup.rodigym.entities.MembershipEntity;
 import ar.edu.utn.frc.tup.rodigym.enums.MemberStatus;
+import ar.edu.utn.frc.tup.rodigym.exceptions.MemberAlreadyExistsException;
 import ar.edu.utn.frc.tup.rodigym.models.Member;
 import ar.edu.utn.frc.tup.rodigym.specifications.MemberSpecification;
 import ar.edu.utn.frc.tup.rodigym.repositories.MemberRepository;
 import ar.edu.utn.frc.tup.rodigym.services.MemberService;
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -58,8 +57,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * Creates a MemberEntity and an associated MembershipEntity. Sets the default membership to one
-     * month starting from today. Uses Transactional annotation to ensure both are saved correctly.
+     * Da de alta al socio activo y <b>sin membresía</b>: queda como deudor hasta que
+     * se le registre el primer pago, que es el que la crea.
+     *
+     * <p>El chequeo de duplicado no es opcional. El id se asigna a mano, así que
+     * Spring Data no ve la entidad como nueva y {@code save} hace un merge: sin el
+     * chequeo, un DNI repetido pisaría en silencio los datos del socio existente.</p>
      *
      * @see MemberService#createMember(MemberCreateDto)
      */
@@ -67,21 +70,11 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public Member createMember(MemberCreateDto memberCreateDto) {
         if (memberRepository.existsById(memberCreateDto.getId())) {
-            throw new IllegalArgumentException(
-                "Member already exists with id: " + memberCreateDto.getId());
+            throw new MemberAlreadyExistsException(memberCreateDto.getId());
         }
 
         MemberEntity memberEntity = modelMapper.map(memberCreateDto, MemberEntity.class);
-        memberEntity.setStatus(true); // Default status for new members
-
-        MembershipEntity membershipEntity = new MembershipEntity();
-        membershipEntity.setStartDate(LocalDate.now());
-        membershipEntity.setExpirationDate(LocalDate.now().plusMonths(1));
-        membershipEntity.setPrice(0.0); // Default price, could be changed later
-
-        // Linking both sides for the bidirectional relationship
-        membershipEntity.setMember(memberEntity);
-        memberEntity.setMembership(membershipEntity);
+        memberEntity.setStatus(true);
 
         MemberEntity savedMember = memberRepository.save(memberEntity);
         return modelMapper.map(savedMember, Member.class);
