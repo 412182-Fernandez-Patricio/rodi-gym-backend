@@ -8,7 +8,7 @@ Spring Boot 3.5.2 · Java · H2 en memoria · ModelMapper · springdoc · Lombok
 ## Comandos
 
 ```bash
-./mvnw test                  # 39 tests
+./mvnw test                  # 52 tests
 ./mvnw -q -DskipTests compile
 ```
 
@@ -21,7 +21,7 @@ estilo rompe la compilación.
 
 | Método | Ruta |
 |---|---|
-| GET/POST | `/members` (búsqueda con `search`, `status`, paginado) |
+| GET/POST | `/members` (búsqueda con `search`, `status`, paginado; el alta responde 201 y 409 si el DNI existe) |
 | GET/PUT/DELETE | `/members/{id}` (baja **lógica**) |
 | GET | `/members/{id}/attendance?month=aaaa-MM` |
 | GET/POST | `/payments` (filtros `member_id`, `payment_method`, `from`, `to`) |
@@ -63,6 +63,12 @@ estilo rompe la compilación.
   absolutas. Con fechas fijas los datos envejecen y las pantallas que filtran por
   hoy o por el mes en curso quedan vacías sin que nada falle. **No volver a poner
   fechas literales.** Ata el archivo a la sintaxis de H2, que es un costo aceptado.
+- **El alta no crea membresía; la crea el primer pago.** Un socio nuevo nace
+  Deudor. Todo código que lea `getMembership()` tiene que contemplar `null`
+  (spec `001-alta-de-socio`).
+- **`MemberEntity` tiene id asignado a mano (el DNI)**, así que `save` hace
+  `merge`: guardar un socio con un DNI existente lo **pisa** sin error. Por eso el
+  alta chequea `existsById` antes y responde 409.
 - **`payments.id` y `check_ins.id` son `IDENTITY`**, así que siguen el orden de
   inserción: las filas del seed van ordenadas por fecha, o quedan registros con id
   menor y fecha posterior. Hay tests que lo verifican.
@@ -83,9 +89,15 @@ posibles. Tests de seed fijan que ese surtido no se pierda.
 - `MemberEntity` no tiene **fecha de alta**, que el mockup del perfil pide.
 - `ConfigController` solo expone el PUT, no hay GET.
 - La búsqueda de socios ignora mayúsculas pero **no acentos**.
+- **Reactivar un socio dado de baja**: su DNI queda ocupado (el alta da 409) y el
+  único camino hoy es cobrarle, porque el pago pone `status = true`.
 - `success` en el check-in quedó derivable de `reason`: redundancia a limpiar.
 
 ## Flujo de trabajo
+
+**Spec primero.** Cada feature arranca con una spec en `docs/specs/` que se
+aprueba antes de escribir código y viaja en el mismo PR. El proceso y la
+estructura están en `docs/specs/README.md`.
 
 Ramas cortas desde `develop`, un PR por feature. Para sacar una rama sin arrastrar
 un `develop` local viejo:
