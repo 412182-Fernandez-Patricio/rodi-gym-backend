@@ -1,6 +1,7 @@
 package ar.edu.utn.frc.tup.rodigym.controllers;
 
 import ar.edu.utn.frc.tup.rodigym.dtos.ErrorApi;
+import ar.edu.utn.frc.tup.rodigym.exceptions.MemberAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -49,6 +50,24 @@ public class ControllerExceptionHandler {
                 .message(e.getMessage())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    /**
+     * Handles attempts to register a member whose ID is already taken.
+     *
+     * @param e The exception carrying the duplicated ID.
+     * @return A response entity with 409 status.
+     */
+    @ExceptionHandler(MemberAlreadyExistsException.class)
+    public ResponseEntity<ErrorApi> handleMemberAlreadyExistsException(
+            MemberAlreadyExistsException e) {
+        ErrorApi error = ErrorApi.builder()
+                .timestamp(LocalDateTime.now().toString())
+                .status(HttpStatus.CONFLICT.value())
+                .error(HttpStatus.CONFLICT.getReasonPhrase())
+                .message(e.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     /**
