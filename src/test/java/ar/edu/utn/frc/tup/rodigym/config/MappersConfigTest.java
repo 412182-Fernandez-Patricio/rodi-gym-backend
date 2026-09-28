@@ -40,6 +40,18 @@ class MappersConfigTest {
     }
 
     @Test
+    void shouldFlattenTheMemberNameIntoThePaymentResponse() {
+        Payment payment = new Payment(7L, member(null), 7000.0,
+                LocalDateTime.parse("2026-08-01T10:05:00"), PaymentMethod.TRANSFER);
+
+        PaymentResponseDto dto = modelMapper.map(payment, PaymentResponseDto.class);
+
+        assertThat(dto.getMemberName()).isEqualTo("Ana");
+        assertThat(dto.getMemberLastName()).isEqualTo("Garcia");
+        assertThat(dto.getMemberId()).isEqualTo(30111222L);
+    }
+
+    @Test
     void shouldExposeTheMembershipExpirationOnTheMemberResponse() {
         Membership membership = new Membership(30111222L, LocalDate.parse("2026-08-01"),
                 LocalDate.parse("2026-09-01"), 7000.0);

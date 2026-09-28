@@ -32,6 +32,22 @@ public final class PaymentSpecification {
     }
 
     /**
+     * Filtra por el socio a partir de texto: nombre, apellido, nombre completo o
+     * parte del DNI, con la misma regla que la búsqueda de socios.
+     *
+     * <p>El join es interno porque todo pago tiene socio, y al ser un ManyToOne no
+     * duplica filas, así que el total de la página sigue contando pagos.</p>
+     *
+     * @param search texto a buscar, o null/vacío para no filtrar.
+     * @return el filtro, o null si no hay texto.
+     */
+    public static Specification<PaymentEntity> memberMatches(String search) {
+        return (root, query, cb) -> search == null || search.isBlank()
+                ? null
+                : MemberSpecification.searchPredicate(cb, root.join("member"), search);
+    }
+
+    /**
      * Filtra por medio de pago.
      *
      * @param paymentMethod medio de pago, o null para no filtrar.
