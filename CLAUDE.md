@@ -8,7 +8,7 @@ Spring Boot 3.5.2 · Java · H2 en memoria · ModelMapper · springdoc · Lombok
 ## Comandos
 
 ```bash
-./mvnw test                  # 52 tests
+./mvnw test                  # 58 tests
 ./mvnw -q -DskipTests compile
 ```
 
@@ -24,7 +24,7 @@ estilo rompe la compilación.
 | GET/POST | `/members` (búsqueda con `search`, `status`, paginado; el alta responde 201 y 409 si el DNI existe) |
 | GET/PUT/DELETE | `/members/{id}` (baja **lógica**) |
 | GET | `/members/{id}/attendance?month=aaaa-MM` |
-| GET/POST | `/payments` (filtros `member_id`, `payment_method`, `from`, `to`) |
+| GET/POST | `/payments` (filtros `search`, `member_id`, `payment_method`, `from`, `to`; cada pago trae `member_name` y `member_last_name`) |
 | GET | `/checkins` (filtros `member_id`, `success`, `from`, `to`) |
 | POST | `/checkins/{memberId}` |
 | PUT | `/config/monthly-price` |
@@ -40,6 +40,9 @@ estilo rompe la compilación.
   **no** con `where()`, que está deprecado en esta versión.
 - **Rangos de fecha semiabiertos** `[from, to)`: `>=` abajo y `<` arriba. Evita
   perder registros entre las 23:59:59 y la medianoche. Hay tests que fijan el borde.
+- **Buscar un socio por texto es una sola regla**: `MemberSpecification.searchPredicate`,
+  que recibe el socio como `Path`. La usan Socios y Pagos (por el join); una
+  búsqueda nueva por socio la reusa en vez de copiar el `cb.or(...)`.
 - Las Specifications son para filtros **opcionales y combinables**. Para un filtro
   fijo (como la asistencia de un mes) va una query JPQL directa, que se lee mejor.
 
@@ -89,6 +92,8 @@ posibles. Tests de seed fijan que ese surtido no se pierda.
 - `MemberEntity` no tiene **fecha de alta**, que el mockup del perfil pide.
 - `ConfigController` solo expone el PUT, no hay GET.
 - La búsqueda de socios ignora mayúsculas pero **no acentos**.
+- `PaymentEntity.member` es ManyToOne EAGER: el listado de pagos hace una
+  consulta extra por socio distinto. Si pesa, `@EntityGraph` en el repositorio.
 - **Reactivar un socio dado de baja**: su DNI queda ocupado (el alta da 409) y el
   único camino hoy es cobrarle, porque el pago pone `status = true`.
 - `success` en el check-in quedó derivable de `reason`: redundancia a limpiar.
