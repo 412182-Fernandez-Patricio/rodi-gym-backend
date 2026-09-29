@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +73,9 @@ public class PaymentController {
      * The amount and date are calculated on the server.
      * Updates the member's membership expiration date.
      *
+     * <p>Responde 201 sin header Location: el proxy del frontend reescribe el
+     * prefijo de la URL.</p>
+     *
      * @param paymentCreateDto the payment details from the request.
      * @return the created payment details.
      */
@@ -79,6 +83,6 @@ public class PaymentController {
     public ResponseEntity<PaymentResponseDto> createPayment(@Valid @RequestBody PaymentCreateDto paymentCreateDto) {
         Payment payment = paymentService.createPayment(paymentCreateDto);
         PaymentResponseDto responseDto = modelMapper.map(payment, PaymentResponseDto.class);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 }
