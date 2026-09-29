@@ -96,9 +96,10 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Page<Payment> searchPayments(Long memberId, PaymentMethod paymentMethod,
-            LocalDateTime from, LocalDateTime to, Pageable pageable) {
+    public Page<Payment> searchPayments(String search, Long memberId,
+            PaymentMethod paymentMethod, LocalDateTime from, LocalDateTime to, Pageable pageable) {
         Specification<PaymentEntity> specification = Specification.allOf(
+                PaymentSpecification.memberMatches(search),
                 PaymentSpecification.hasMemberId(memberId),
                 PaymentSpecification.hasPaymentMethod(paymentMethod),
                 PaymentSpecification.paymentDateFrom(from),

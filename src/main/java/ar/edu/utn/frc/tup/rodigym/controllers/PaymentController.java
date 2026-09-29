@@ -40,6 +40,7 @@ public class PaymentController {
      * la query. El rango de fechas es semiabierto, {@code from} incluido y
      * {@code to} excluido.</p>
      *
+     * @param search        texto a buscar en el socio: nombre, apellido o DNI.
      * @param memberId      filtra por socio.
      * @param paymentMethod filtra por medio de pago.
      * @param from          fecha desde, inclusive.
@@ -49,6 +50,7 @@ public class PaymentController {
      */
     @GetMapping("")
     public ResponseEntity<PageResponseDto<PaymentResponseDto>> searchPayments(
+            @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "member_id", required = false) Long memberId,
             @RequestParam(name = "payment_method", required = false) PaymentMethod paymentMethod,
             @RequestParam(name = "from", required = false)
@@ -58,7 +60,8 @@ public class PaymentController {
             @PageableDefault(size = 10, sort = "paymentDate", direction = Sort.Direction.DESC)
             Pageable pageable) {
         Page<Payment> payments =
-                paymentService.searchPayments(memberId, paymentMethod, from, to, pageable);
+                paymentService.searchPayments(search, memberId, paymentMethod, from, to,
+                        pageable);
 
         return ResponseEntity.ok(PageResponseDto.from(payments,
                 payment -> modelMapper.map(payment, PaymentResponseDto.class)));

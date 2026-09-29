@@ -89,6 +89,58 @@ class PaymentSpecificationTest {
         assertThat(result.getTotalElements()).isGreaterThanOrEqualTo(4);
     }
 
+    // Spec 002: búsqueda por socio. Los socios del fixture se apellidan "Test" y el
+    // seed no tiene ninguno así, de modo que los conteos no dependen del seed.
+
+    @Test
+    void shouldFindByMemberLastNameIgnoringCase() {
+        Page<PaymentEntity> result = search(
+                Specification.allOf(PaymentSpecification.memberMatches("TEST")));
+
+        assertThat(result.getTotalElements()).isEqualTo(4);
+        assertThat(result.getContent()).hasSize(4)
+                .allMatch(payment -> payment.getMember().getLastName().equals("Test"));
+    }
+
+    @Test
+    void shouldFindByMemberFullName() {
+        Page<PaymentEntity> result = search(
+                Specification.allOf(PaymentSpecification.memberMatches("ana test")));
+
+        assertThat(result.getTotalElements()).isEqualTo(3);
+        assertThat(result.getContent())
+                .allMatch(payment -> payment.getMember().getId().equals(MEMBER_ID));
+    }
+
+    @Test
+    void shouldFindByPartOfTheDni() {
+        Page<PaymentEntity> result = search(
+                Specification.allOf(PaymentSpecification.memberMatches("887767")));
+
+        assertThat(result.getContent()).extracting(PaymentEntity::getAmount)
+                .containsExactly(4000.0);
+    }
+
+    @Test
+    void shouldIgnoreABlankSearch() {
+        long everything = paymentRepository.count();
+
+        assertThat(search(Specification.allOf(PaymentSpecification.memberMatches("   ")))
+                .getTotalElements()).isEqualTo(everything);
+        assertThat(search(Specification.allOf(PaymentSpecification.memberMatches(null)))
+                .getTotalElements()).isEqualTo(everything);
+    }
+
+    @Test
+    void shouldCombineTheSearchWithThePaymentMethod() {
+        Page<PaymentEntity> result = search(Specification.allOf(
+                PaymentSpecification.memberMatches("ana test"),
+                PaymentSpecification.hasPaymentMethod(PaymentMethod.CASH)));
+
+        assertThat(result.getContent()).extracting(PaymentEntity::getAmount)
+                .containsExactly(3000.0, 1000.0);
+    }
+
     @Test
     void shouldPaginateKeepingTheTotalAndTheNewestFirst() {
         Specification<PaymentEntity> specification =

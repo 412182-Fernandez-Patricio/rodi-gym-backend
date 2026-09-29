@@ -13,6 +13,7 @@ public interface PaymentService {
     /**
      * Busca pagos aplicando solo los filtros informados.
      *
+     * @param search        texto a buscar en el socio (nombre, apellido o DNI), o null.
      * @param memberId      socio dueño del pago, o null.
      * @param paymentMethod medio de pago, o null.
      * @param from          fecha desde, inclusive, o null.
@@ -20,6 +21,6 @@ public interface PaymentService {
      * @param pageable      página y orden pedidos.
      * @return la página de pagos, con el total para que el cliente sepa si hay más.
      */
-    Page<Payment> searchPayments(Long memberId, PaymentMethod paymentMethod, LocalDateTime from,
-            LocalDateTime to, Pageable pageable);
+    Page<Payment> searchPayments(String search, Long memberId, PaymentMethod paymentMethod,
+            LocalDateTime from, LocalDateTime to, Pageable pageable);
 }

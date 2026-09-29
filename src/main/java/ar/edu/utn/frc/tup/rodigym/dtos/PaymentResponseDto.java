@@ -15,6 +15,10 @@ public class PaymentResponseDto {
     private Long id;
     @JsonProperty("member_id")
     private Long memberId;
+    @JsonProperty("member_name")
+    private String memberName;
+    @JsonProperty("member_last_name")
+    private String memberLastName;
     private Double amount;
     @JsonProperty("payment_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
