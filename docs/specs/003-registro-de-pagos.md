@@ -1,6 +1,6 @@
 # 003 · Registro de pagos
 
-**Estado:** Borrador · **Repo:** backend · **Rama:** `feature/register-payment`
+**Estado:** Implementada · **Repo:** backend · **Rama:** `feature/register-payment`
 
 ## Contexto
 
@@ -131,8 +131,8 @@ juntos, y la ventana sería arbitraria.
   `ConfigServiceImplTest`).
 - [x] `./mvnw test` en verde: 67 tests.
 - [x] Actualizar `CLAUDE.md`.
-- [ ] Probarlo contra el frontend (lo levanta el usuario).
-- [ ] Pasar esta spec a **Implementada**.
+- [x] Probarlo contra el frontend (lo levanta el usuario).
+- [x] Pasar esta spec a **Implementada**.
 
 ## Pendientes
 
