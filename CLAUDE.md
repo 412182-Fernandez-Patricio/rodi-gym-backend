@@ -8,7 +8,7 @@ Spring Boot 3.5.2 · Java · H2 en memoria · ModelMapper · springdoc · Lombok
 ## Comandos
 
 ```bash
-./mvnw test                  # 58 tests
+./mvnw test                  # 67 tests
 ./mvnw -q -DskipTests compile
 ```
 
@@ -24,10 +24,10 @@ estilo rompe la compilación.
 | GET/POST | `/members` (búsqueda con `search`, `status`, paginado; el alta responde 201 y 409 si el DNI existe) |
 | GET/PUT/DELETE | `/members/{id}` (baja **lógica**) |
 | GET | `/members/{id}/attendance?month=aaaa-MM` |
-| GET/POST | `/payments` (filtros `search`, `member_id`, `payment_method`, `from`, `to`; cada pago trae `member_name` y `member_last_name`) |
+| GET/POST | `/payments` (filtros `search`, `member_id`, `payment_method`, `from`, `to`; cada pago trae `member_name` y `member_last_name`; el alta responde 201) |
 | GET | `/checkins` (filtros `member_id`, `success`, `from`, `to`) |
 | POST | `/checkins/{memberId}` |
-| PUT | `/config/monthly-price` |
+| GET/PUT | `/config/monthly-price` (el GET devuelve lo que va a cobrar el próximo pago) |
 
 ## Convenciones ya establecidas
 
@@ -72,6 +72,10 @@ estilo rompe la compilación.
 - **`MemberEntity` tiene id asignado a mano (el DNI)**, así que `save` hace
   `merge`: guardar un socio con un DNI existente lo **pisa** sin error. Por eso el
   alta chequea `existsById` antes y responde 409.
+- **El handler genérico de `Exception` convierte errores del cliente en 500.**
+  Todo lo que no tiene handler propio cae ahí. Un body ilegible (JSON roto, enum
+  desconocido) ya tiene el suyo y responde 400 (spec 003); un enum inválido en un
+  **query param** todavía no.
 - **`payments.id` y `check_ins.id` son `IDENTITY`**, así que siguen el orden de
   inserción: las filas del seed van ordenadas por fecha, o quedan registros con id
   menor y fecha posterior. Hay tests que lo verifican.
@@ -90,7 +94,6 @@ posibles. Tests de seed fijan que ese surtido no se pierda.
   dispositivo físico con numpad (Arduino).
 - `PaymentEntity` no modela **qué período cubre** un pago, solo cuándo se hizo.
 - `MemberEntity` no tiene **fecha de alta**, que el mockup del perfil pide.
-- `ConfigController` solo expone el PUT, no hay GET.
 - La búsqueda de socios ignora mayúsculas pero **no acentos**.
 - `PaymentEntity.member` es ManyToOne EAGER: el listado de pagos hace una
   consulta extra por socio distinto. Si pesa, `@EntityGraph` en el repositorio.
